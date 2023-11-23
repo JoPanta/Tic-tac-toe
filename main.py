@@ -6,7 +6,13 @@ board = [
     [" ", " ", " "]
 ]
 
-game_on = True
+def reset_board():
+    global board
+    board = [
+        [" ", " ", " "],
+        [" ", " ", " "],
+        [" ", " ", " "]
+    ]
 
 def print_board():
     for i, row in enumerate(board):
@@ -14,10 +20,54 @@ def print_board():
         if i < len(board) - 1:
             print("_________")
 
+def replay():
+    global board
+    play_again = input("Do you want to play again? 1 for Yes, 2 for No.")
+    if play_again == "1":
+        reset_board()
+        main()
+    elif play_again == "2":
+        exit()
+    else:
+        print("Invalid input. Please enter 1 for Yes or 2 for No.")
+        return replay()
+
 
 def ai_move():
     ai_played = False
     while not ai_played:
+        #checkinf for diagonal win:
+        if board[0][0] == "O" and board[1][1] == "O" and board[2][2] == " ":
+            board[2][2] = "O"
+            ai_played = True
+            return ai_played
+        elif board[1][1] == "O" and board[2][2] == "O" and board[0][0] == " ":
+            board[0][0] = "O"
+            ai_played = True
+            return ai_played
+        elif board[0][2] == "O" and board[1][1] == "O" and board[2][0] == " ":
+            board[2][0] = "O"
+            ai_played = True
+            return ai_played
+        elif board[1][1] == "O" and board[2][0] == "O" and board[0][2] == " ":
+            board[0][2] = "O"
+            ai_played = True
+            return ai_played
+        #checking for horizontal win
+        for i in range(len(board)):
+            if board[i].count("O") == 2 and " " in board[i]:
+                f = board[i].index(" ")
+                board[i][f] = "O"
+                ai_played = True
+                return ai_played
+        #checking for vertical win:
+        for column in range(3):
+            if ((board[0][column], board[1][column], board[2][column]).count("O") == 2
+                    and " " in (board[0][column], board[1][column], board[2][column])):
+                index_of_space = (board[0][column], board[1][column], board[2][column]).index(" ")
+                board[index_of_space][column] = "O"
+                ai_played = True
+                return ai_played
         # blocking diagonal loss
         if board[0][0] == "X" and board[1][1] == "X" and board[2][2] == " ":
             board[2][2] = "O"
@@ -98,64 +148,60 @@ def player_move():
         print("This spot is already taken")
         player_move()
 
-
-while game_on:
-    print_board()
-    player_move()
-    #checking if player wins
-    #diagonal:
-    if (board[0][0] == "X" and board[1][1] == "X" and board[2][2] == "X"
-            or board[0][2] == "X" and board[1][1] == "X" and board[2][0] == "X"):
+def main():
+    global board
+    while True:
         print_board()
-        print("YOU WIN!")
-        game_on = False
-        break
-    #horizontal
-    for i in range(len(board)):
-        if board[i].count("X") == 3:
+        player_move()
+        #checking if player wins
+        #diagonal:
+        if (board[0][0] == "X" and board[1][1] == "X" and board[2][2] == "X"
+                or board[0][2] == "X" and board[1][1] == "X" and board[2][0] == "X"):
             print_board()
             print("YOU WIN!")
-            game_on = False
-            break
-    #vertical
-    for column in range(3):
-        if (board[0][column], board[1][column], board[2][column]).count("X") == 3:
+            replay()
+        #horizontal
+        for i in range(len(board)):
+            if board[i].count("X") == 3:
+                print_board()
+                print("YOU WIN!")
+                replay()
+        #vertical
+        for column in range(3):
+            if (board[0][column], board[1][column], board[2][column]).count("X") == 3:
+                print_board()
+                print("YOU WIN!")
+                replay()
+        #checking for a draw
+        if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board[2].count(" ") == 0:
             print_board()
-            print("YOU WIN!")
-            game_on = False
-            break
-    #checking for a draw
-    if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board[2].count(" ") == 0:
-        print_board()
-        print("IT'S A DRAW!")
-        game_on = False
-        break
-    ai_move()
-    #checking if ai wins
-    #diagonal:
-    if (board[0][0] == "O" and board[1][1] == "O" and board[2][2] == "O"
-            or board[0][2] == "O" and board[1][1] == "O" and board[2][0] == "O"):
-        print_board()
-        print("PC WINS!")
-        game_on = False
-        break
-    #horizontal
-    for i in range(len(board)):
-        if board[i].count("O") == 3:
+            print("IT'S A DRAW!")
+            replay()
+        ai_move()
+        #checking if ai wins
+        #diagonal:
+        if (board[0][0] == "O" and board[1][1] == "O" and board[2][2] == "O"
+                or board[0][2] == "O" and board[1][1] == "O" and board[2][0] == "O"):
             print_board()
             print("PC WINS!")
-            game_on = False
-            break
-    #vertical
-    for column in range(3):
-        if (board[0][column], board[1][column], board[2][column]).count("O") == 3:
+            replay()
+        #horizontal
+        for i in range(len(board)):
+            if board[i].count("O") == 3:
+                print_board()
+                print("PC WINS!")
+                replay()
+        #vertical
+        for column in range(3):
+            if (board[0][column], board[1][column], board[2][column]).count("O") == 3:
+                print_board()
+                print("PC WINS!")
+                replay()
+        # checking for a draw
+        if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board[2].count(" ") == 0:
             print_board()
-            print("PC WINS!")
-            game_on = False
-            break
-    # checking for a draw
-    if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board[2].count(" ") == 0:
-        print_board()
-        print("IT'S A DRAW!")
-        game_on = False
+            print("IT'S A DRAW!")
+            replay()
 
+
+main()
