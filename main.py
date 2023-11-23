@@ -22,21 +22,26 @@ def ai_move():
         if board[0][0] == "X" and board[1][1] == "X" and board[2][2] == " ":
             board[2][2] = "O"
             ai_played = True
+            return ai_played
         elif board[1][1] == "X" and board[2][2] == "X" and board[0][0] == " ":
             board[0][0] = "O"
             ai_played = True
+            return ai_played
         elif board[0][2] == "X" and board[1][1] == "X" and board[2][0] == " ":
             board[2][0] = "O"
             ai_played = True
+            return ai_played
         elif board[1][1] == "X" and board[2][0] == "X" and board[0][2] == " ":
             board[0][2] = "O"
             ai_played = True
+            return ai_played
         # blocking horizontal loss
         for i in range(len(board)):
             if board[i].count("X") == 2 and " " in board[i]:
                 f = board[i].index(" ")
                 board[i][f] = "O"
                 ai_played = True
+                return ai_played
         # blocking vertical loss
 
         for column in range(3):
@@ -45,20 +50,24 @@ def ai_move():
                 index_of_space = (board[0][column], board[1][column], board[2][column]).index(" ")
                 board[index_of_space][column] = "O"
                 ai_played = True
+                return ai_played
 
         # checking for center spot
         if board[1][1] == " ":
             board[1][1] = "O"
             ai_played = True
+            return ai_played
 
         # random move
         random_row = random.choice(board)
-        random_col = random.randint(0, 2)
+        random_col = random.choice(range(3))
         if random_row[random_col] == " ":
             random_row[random_col] = "O"
             ai_played = True
+            return ai_played
         elif all(cell != " " for row in board for cell in row):
             ai_played = True
+            return ai_played
     return board
 
 
@@ -97,24 +106,30 @@ while game_on:
     #diagonal:
     if (board[0][0] == "X" and board[1][1] == "X" and board[2][2] == "X"
             or board[0][2] == "X" and board[1][1] == "X" and board[2][0] == "X"):
+        print_board()
         print("YOU WIN!")
         game_on = False
+        break
     #horizontal
     for i in range(len(board)):
         if board[i].count("X") == 3:
+            print_board()
             print("YOU WIN!")
             game_on = False
+            break
     #vertical
     for column in range(3):
         if (board[0][column], board[1][column], board[2][column]).count("X") == 3:
             print_board()
             print("YOU WIN!")
             game_on = False
+            break
     #checking for a draw
-    if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board.count(" ") == 0:
+    if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board[2].count(" ") == 0:
         print_board()
-        print("IT'S A DRAW")
+        print("IT'S A DRAW!")
         game_on = False
+        break
     ai_move()
     #checking if ai wins
     #diagonal:
@@ -123,21 +138,24 @@ while game_on:
         print_board()
         print("PC WINS!")
         game_on = False
+        break
     #horizontal
     for i in range(len(board)):
         if board[i].count("O") == 3:
             print_board()
             print("PC WINS!")
             game_on = False
+            break
     #vertical
     for column in range(3):
         if (board[0][column], board[1][column], board[2][column]).count("O") == 3:
             print_board()
             print("PC WINS!")
             game_on = False
+            break
     # checking for a draw
-    if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board.count(" ") == 0:
+    if board[0].count(" ") == 0 and board[1].count(" ") == 0 and board[2].count(" ") == 0:
         print_board()
-        print("IT'S A DRAW")
+        print("IT'S A DRAW!")
         game_on = False
 
