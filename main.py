@@ -22,14 +22,14 @@ def print_board():
 
 def replay():
     global board
-    play_again = input("Do you want to play again? 1 for Yes, 2 for No.")
-    if play_again == "1":
+    play_again = input("Do you want to play again? Y or N: ").upper()
+    if play_again == "Y":
         reset_board()
         main()
-    elif play_again == "2":
+    elif play_again == "N":
         exit()
     else:
-        print("Invalid input. Please enter 1 for Yes or 2 for No.")
+        print("Invalid input. Please enter Y for Yes or N for No.")
         return replay()
 
 
@@ -148,10 +148,24 @@ def player_move():
         print("This spot is already taken")
         player_move()
 
+
+
 def main():
+
+    round = 1
     global board
     while True:
         print_board()
+
+        if round == 1:
+            first = input("Do you want to play first? Y or N: ").upper()
+            if first == "N":
+                ai_move()
+
+                print_board()
+            else:
+                pass
+
         player_move()
         #checking if player wins
         #diagonal:
@@ -177,6 +191,8 @@ def main():
             print_board()
             print("IT'S A DRAW!")
             replay()
+
+
         ai_move()
         #checking if ai wins
         #diagonal:
@@ -202,6 +218,8 @@ def main():
             print_board()
             print("IT'S A DRAW!")
             replay()
+
+        round += 1
 
 
 main()
